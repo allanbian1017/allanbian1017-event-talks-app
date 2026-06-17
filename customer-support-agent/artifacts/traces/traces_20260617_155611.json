@@ -1,0 +1,132 @@
+{
+  "eval_cases": [
+    {
+      "prompt": {
+        "parts": [
+          {
+            "text": "Hello, what can you help me with?"
+          }
+        ],
+        "role": "user"
+      },
+      "responses": [
+        {
+          "response": {
+            "parts": [
+              {
+                "text": "I'm sorry, but I can only assist with shipping-related inquiries such as rates, tracking, delivery, or returns. Please let me know if you have any questions about our shipping services!"
+              }
+            ],
+            "role": "model"
+          }
+        }
+      ],
+      "eval_case_id": "greeting",
+      "agent_data": {
+        "agents": {
+          "customer_support_workflow": {
+            "agent_id": "customer_support_workflow",
+            "agent_type": "Workflow",
+            "description": "Customer support router and responder for shipping inquiries.",
+            "tools": [],
+            "sub_agents": []
+          }
+        },
+        "turns": [
+          {
+            "turn_index": 0,
+            "turn_id": "turn_0",
+            "events": [
+              {
+                "author": "classifier_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "text": "{\"is_shipping_related\": false}"
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "customer_support_workflow",
+                "content": {
+                  "parts": [
+                    {
+                      "text": "I'm sorry, but I can only assist with shipping-related inquiries such as rates, tracking, delivery, or returns. Please let me know if you have any questions about our shipping services!"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "prompt": {
+        "parts": [
+          {
+            "text": "What's the weather like in San Francisco?"
+          }
+        ],
+        "role": "user"
+      },
+      "responses": [
+        {
+          "response": {
+            "parts": [
+              {
+                "text": "I'm sorry, but I can only assist with shipping-related inquiries such as rates, tracking, delivery, or returns. Please let me know if you have any questions about our shipping services!"
+              }
+            ],
+            "role": "model"
+          }
+        }
+      ],
+      "eval_case_id": "weather_query",
+      "agent_data": {
+        "agents": {
+          "customer_support_workflow": {
+            "agent_id": "customer_support_workflow",
+            "agent_type": "Workflow",
+            "description": "Customer support router and responder for shipping inquiries.",
+            "tools": [],
+            "sub_agents": []
+          }
+        },
+        "turns": [
+          {
+            "turn_index": 0,
+            "turn_id": "turn_0",
+            "events": [
+              {
+                "author": "classifier_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "text": "{\"is_shipping_related\":false}"
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "customer_support_workflow",
+                "content": {
+                  "parts": [
+                    {
+                      "text": "I'm sorry, but I can only assist with shipping-related inquiries such as rates, tracking, delivery, or returns. Please let me know if you have any questions about our shipping services!"
+                    }
+                  ],
+                  "role": "model"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

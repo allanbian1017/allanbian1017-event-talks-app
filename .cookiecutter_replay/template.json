@@ -1,0 +1,123 @@
+{
+  "cookiecutter": {
+    "project_name": "customer-support-agent",
+    "agent_name": "adk",
+    "package_version": "0.5.0",
+    "generated_at": "2026-06-17T07:40:24.723851+00:00",
+    "agent_description": "Simple ReAct agent",
+    "example_question": "What's the weather in San Francisco?                         ",
+    "settings": {
+      "requires_data_ingestion": false,
+      "requires_session": true,
+      "deployment_targets": [
+        "agent_runtime",
+        "cloud_run",
+        "gke",
+        "none"
+      ],
+      "extra_dependencies": [
+        "google-adk[gcp]>=2.0.0,<3.0.0"
+      ],
+      "tags": [
+        "adk"
+      ],
+      "frontend_type": "None"
+    },
+    "tags": "adk",
+    "is_a2a": false,
+    "requires_data_ingestion": false,
+    "language": "python",
+    "deployment_target": "none",
+    "cicd_runner": "skip",
+    "session_type": "in_memory",
+    "frontend_type": "None",
+    "extra_dependencies": [
+      "google-adk[gcp]>=2.0.0,<3.0.0"
+    ],
+    "data_ingestion": false,
+    "datastore_type": "",
+    "agent_directory": "app",
+    "agent_garden": false,
+    "agent_sample_id": "",
+    "agent_sample_publisher": "",
+    "use_google_api_key": false,
+    "google_cloud_project": "your-gcp-project-id",
+    "java_package": "",
+    "java_package_path": "",
+    "bq_analytics": false,
+    "wheel_gcs_uri": "",
+    "agent_guidance_filename": "GEMINI.md",
+    "_copy_without_render": [
+      "*.ipynb",
+      "*.sum",
+      "e2e/**/*",
+      "frontend/**/*",
+      "sample_data/*",
+      ".git/*",
+      "__pycache__/*",
+      "**/__pycache__/*",
+      ".pytest_cache/*",
+      ".venv/*",
+      "**/.venv/*",
+      "node_modules/**/*",
+      "*templates.py"
+    ],
+    "_template": "/var/folders/hn/64f8208s7k1929s_xv_p8d9r0000gn/T/tmpxodac6mu/template",
+    "_output_dir": "/private/var/folders/hn/64f8208s7k1929s_xv_p8d9r0000gn/T/tmpxodac6mu",
+    "_repo_dir": "/var/folders/hn/64f8208s7k1929s_xv_p8d9r0000gn/T/tmpxodac6mu/template",
+    "_checkout": null
+  },
+  "_cookiecutter": {
+    "project_name": "customer-support-agent",
+    "agent_name": "adk",
+    "package_version": "0.5.0",
+    "generated_at": "2026-06-17T07:40:24.723851+00:00",
+    "agent_description": "Simple ReAct agent",
+    "example_question": "What's the weather in San Francisco?                         ",
+    "settings": {
+      "requires_data_ingestion": false,
+      "requires_session": true,
+      "deployment_targets": [
+        "agent_runtime",
+        "cloud_run",
+        "gke",
+        "none"
+      ],
+      "extra_dependencies": [
+        "google-adk[gcp]>=2.0.0,<3.0.0"
+      ],
+      "tags": [
+        "adk"
+      ],
+      "frontend_type": "None"
+    },
+    "tags": [
+      "adk"
+    ],
+    "is_a2a": false,
+    "requires_data_ingestion": false,
+    "language": "python",
+    "deployment_target": "none",
+    "cicd_runner": "skip",
+    "session_type": "in_memory",
+    "frontend_type": "None",
+    "extra_dependencies": [
+      [
+        "google-adk[gcp]>=2.0.0,<3.0.0"
+      ]
+    ],
+    "data_ingestion": false,
+    "datastore_type": "",
+    "agent_directory": "app",
+    "agent_garden": false,
+    "agent_sample_id": "",
+    "agent_sample_publisher": "",
+    "use_google_api_key": false,
+    "google_cloud_project": "your-gcp-project-id",
+    "java_package": "",
+    "java_package_path": "",
+    "bq_analytics": false,
+    "wheel_gcs_uri": "",
+    "agent_guidance_filename": "GEMINI.md"
+  }
+}
