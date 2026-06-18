@@ -150,5 +150,4 @@ cython_debug/
 Thumbs.db
 
 # Agent files
-.agents/
-
+.agents/skills/google-agents-cli*
