@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Approval Dashboard</title>
+    <!-- Outfit Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: rgba(17, 24, 39, 0.45);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --color-primary: #6366f1; /* Indigo */
+            --color-success: #10b981; /* Emerald */
+            --color-danger: #ef4444; /* Rose/Red */
+            --color-warning: #f59e0b; /* Amber */
+            --glow-indigo: rgba(99, 102, 241, 0.15);
+            --glow-emerald: rgba(16, 185, 129, 0.15);
+            --glow-rose: rgba(239, 68, 68, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Radial Glow Backgrounds */
+        .bg-glow-1 {
+            position: absolute;
+            top: -10%;
+            left: -10%;
+            width: 50vw;
+            height: 50vw;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, rgba(99, 102, 241, 0) 70%);
+            filter: blur(80px);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .bg-glow-2 {
+            position: absolute;
+            bottom: -10%;
+            right: -10%;
+            width: 60vw;
+            height: 60vw;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.1) 0%, rgba(6, 182, 212, 0) 70%);
+            filter: blur(100px);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2.5rem 1.5rem;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 1.5rem;
+        }
+
+        .logo-section h1 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffffff 40%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.025em;
+        }
+
+        .logo-section p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+            font-weight: 300;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--color-success);
+            box-shadow: 0 0 10px var(--color-success);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.9); opacity: 0.6; }
+            50% { transform: scale(1.1); opacity: 1; box-shadow: 0 0 14px var(--color-success); }
+            100% { transform: scale(0.9); opacity: 0.6; }
+        }
+
+        /* Grid Layout */
+        .approval-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 2rem;
+        }
+
+        /* Glassmorphism Card */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 1.25rem;
+            padding: 1.75rem;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 480px;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(130deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 60%);
+            pointer-events: none;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 15px 35px rgba(99, 102, 241, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.25rem;
+        }
+
+        .submitter-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .submitter-name {
+            font-size: 1.15rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+
+        .submitter-date {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 0.15rem;
+        }
+
+        .amount-glow {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.35rem 0.85rem;
+            border-radius: 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .category-tag {
+            display: inline-block;
+            align-self: flex-start;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0.25rem 0.65rem;
+            border-radius: 0.5rem;
+            background: rgba(99, 102, 241, 0.12);
+            color: #a5b4fc;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            margin-bottom: 1.25rem;
+        }
+
+        .description-box {
+            font-size: 0.925rem;
+            color: var(--text-primary);
+            line-height: 1.5;
+            background: rgba(0, 0, 0, 0.15);
+            padding: 0.95rem;
+            border-radius: 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+            overflow-y: auto;
+            max-height: 100px;
+        }
+
+        /* Risk assessment section */
+        .risk-assessment {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 1.75rem;
+        }
+
+        .risk-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+        }
+
+        .risk-badge {
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.15rem 0.5rem;
+            border-radius: 0.35rem;
+        }
+
+        .risk-badge.low {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .risk-badge.medium {
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .risk-badge.high {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.1);
+        }
+
+        .risk-notes {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            margin-top: 0.25rem;
+        }
+
+        /* Action Buttons */
+        .card-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: auto;
+        }
+
+        .btn {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.85rem 1rem;
+            border-radius: 0.75rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        .btn-approve {
+            background: var(--color-success);
+            color: #ffffff;
+            border: none;
+            box-shadow: 0 4px 14px var(--glow-emerald);
+        }
+
+        .btn-approve:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+            filter: brightness(1.1);
+        }
+
+        .btn-reject {
+            background: transparent;
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-reject:hover:not(:disabled) {
+            background: rgba(239, 68, 68, 0.08);
+            border-color: rgba(239, 68, 68, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Spinner */
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid #ffffff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Card Disabling overlay during action */
+        .card.loading-action::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(11, 15, 25, 0.4);
+            backdrop-filter: blur(2px);
+            z-index: 10;
+            pointer-events: all;
+        }
+
+        /* Slide-out Panel Modal */
+        .slide-modal {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            max-width: 460px;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-left: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: -10px 0 40px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide-modal.open {
+            transform: translateX(0);
+        }
+
+        .modal-header {
+            padding: 2rem 1.75rem 1.5rem 1.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+
+        .close-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-primary);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1.1rem;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: scale(1.05);
+        }
+
+        .modal-body {
+            padding: 2rem 1.75rem;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .modal-section {
+            margin-bottom: 2rem;
+        }
+
+        .modal-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            margin-bottom: 0.65rem;
+            font-weight: 600;
+        }
+
+        .modal-value-box {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            font-size: 0.95rem;
+            line-height: 1.55;
+            color: var(--text-primary);
+            white-space: pre-line; /* preserves formatting */
+        }
+
+        .compliance-status {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            border-radius: 0.75rem;
+        }
+
+        .compliance-status.approved {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: #34d399;
+        }
+
+        .compliance-status.rejected {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: #f87171;
+        }
+
+        /* Overlay backdrop */
+        .overlay-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 99;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .overlay-backdrop.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* Skeleton Loaders */
+        .skeleton-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 1.25rem;
+            padding: 1.75rem;
+            min-height: 480px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .skeleton-line {
+            background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 75%);
+            background-size: 200% 100%;
+            animation: loading-shimmer 1.5s infinite;
+            border-radius: 0.5rem;
+        }
+
+        @keyframes loading-shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Empty State */
+        .empty-state {
+            grid-column: 1 / -1;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 1.25rem;
+            padding: 4rem 2rem;
+            text-align: center;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state p {
+            color: var(--text-secondary);
+            font-weight: 300;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="bg-glow-1"></div>
+    <div class="bg-glow-2"></div>
+
+    <div class="container">
+        <header>
+            <div class="logo-section">
+                <h1>Expense Approvals</h1>
+                <p>Manager Review & Compliance Audit Dashboard</p>
+            </div>
+            <div class="status-badge">
+                <div class="status-dot"></div>
+                <span>Live Connection</span>
+            </div>
+        </header>
+
+        <!-- Main Approvals Grid -->
+        <main class="approval-grid" id="approvals-grid">
+            <!-- Skeleton Loaders initially -->
+            <div class="skeleton-card">
+                <div>
+                    <div class="card-header" style="margin-bottom: 1.5rem;">
+                        <div style="display: flex; flex-direction: column; gap: 0.5rem; width: 60%;">
+                            <div class="skeleton-line" style="height: 1.25rem; width: 100%;"></div>
+                            <div class="skeleton-line" style="height: 0.8rem; width: 60%;"></div>
+                        </div>
+                        <div class="skeleton-line" style="height: 2.2rem; width: 80px; border-radius: 0.75rem;"></div>
+                    </div>
+                    <div class="skeleton-line" style="height: 1.5rem; width: 100px; margin-bottom: 1.5rem;"></div>
+                    <div class="skeleton-line" style="height: 5rem; width: 100%; margin-bottom: 1.5rem;"></div>
+                    <div class="skeleton-line" style="height: 4.5rem; width: 100%; margin-bottom: 1.5rem;"></div>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <div class="skeleton-line" style="height: 3rem; flex: 1; border-radius: 0.75rem;"></div>
+                    <div class="skeleton-line" style="height: 3rem; flex: 1; border-radius: 0.75rem;"></div>
+                </div>
+            </div>
+            <div class="skeleton-card">
+                <div>
+                    <div class="card-header" style="margin-bottom: 1.5rem;">
+                        <div style="display: flex; flex-direction: column; gap: 0.5rem; width: 60%;">
+                            <div class="skeleton-line" style="height: 1.25rem; width: 100%;"></div>
+                            <div class="skeleton-line" style="height: 0.8rem; width: 60%;"></div>
+                        </div>
+                        <div class="skeleton-line" style="height: 2.2rem; width: 80px; border-radius: 0.75rem;"></div>
+                    </div>
+                    <div class="skeleton-line" style="height: 1.5rem; width: 100px; margin-bottom: 1.5rem;"></div>
+                    <div class="skeleton-line" style="height: 5rem; width: 100%; margin-bottom: 1.5rem;"></div>
+                    <div class="skeleton-line" style="height: 4.5rem; width: 100%; margin-bottom: 1.5rem;"></div>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <div class="skeleton-line" style="height: 3rem; flex: 1; border-radius: 0.75rem;"></div>
+                    <div class="skeleton-line" style="height: 3rem; flex: 1; border-radius: 0.75rem;"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Backdrop Overlay for Modal -->
+    <div class="overlay-backdrop" id="modal-backdrop"></div>
+
+    <!-- Slide Out Modal Panel -->
+    <div class="slide-modal" id="compliance-modal">
+        <div class="modal-header">
+            <h2 class="modal-title">Compliance Review</h2>
+            <button class="close-btn" id="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div id="modal-compliance-status" class="compliance-status">
+                <span>&#10004;</span> <span id="status-text">Approved</span>
+            </div>
+
+            <div class="modal-section">
+                <div class="modal-label">Agent Resolution Outcome</div>
+                <div class="modal-value-box" id="modal-outcome-text">
+                    Loading compliance decision...
+                </div>
+            </div>
+
+            <div class="modal-section">
+                <div class="modal-label">Audit Session ID</div>
+                <code style="font-family: monospace; font-size: 0.85rem; color: #a5b4fc; background: rgba(0,0,0,0.2); padding: 0.25rem 0.5rem; border-radius: 0.35rem;" id="modal-session-id">
+                    -
+                </code>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const grid = document.getElementById('approvals-grid');
+        const modal = document.getElementById('compliance-modal');
+        const backdrop = document.getElementById('modal-backdrop');
+        const closeModalBtn = document.getElementById('close-modal');
+
+        // Fetch Pending approvals
+        async function loadPendingApprovals() {
+            try {
+                const response = await fetch('/api/pending');
+                const data = await response.json();
+                renderCards(data);
+            } catch (err) {
+                console.error("Error loading pending approvals:", err);
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">⚠️</div>
+                        <h2>Failed to retrieve data</h2>
+                        <p>Please ensure backend services and GCP environment are running.</p>
+                    </div>
+                `;
+            }
+        }
+
+        function renderCards(items) {
+            grid.innerHTML = '';
+            
+            if (!items || items.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🎉</div>
+                        <h2>All caught up!</h2>
+                        <p>No expenses are currently waiting for manager review.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            items.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.id = `card-${item.session_id}`;
+
+                // Determine risk level class
+                const riskLevel = (item.expense.risk_level || 'low').toLowerCase();
+
+                card.innerHTML = `
+                    <div>
+                        <div class="card-header">
+                            <div class="submitter-info">
+                                <span class="submitter-name">${escapeHtml(item.expense.submitter)}</span>
+                                <span class="submitter-date">${escapeHtml(item.expense.date || 'Unknown Date')}</span>
+                            </div>
+                            <span class="amount-glow">$${parseFloat(item.expense.amount || 0).toFixed(2)}</span>
+                        </div>
+
+                        <span class="category-tag">${escapeHtml(item.expense.category || 'Expense')}</span>
+
+                        <div class="description-box">
+                            ${escapeHtml(item.expense.description)}
+                        </div>
+
+                        <div class="risk-assessment">
+                            <div class="risk-header">
+                                <span>LLM Review</span>
+                                <span class="risk-badge ${riskLevel}">${escapeHtml(item.expense.risk_level || 'Low')}</span>
+                            </div>
+                            <div class="risk-notes">
+                                ${escapeHtml(item.expense.risk_notes || 'No suspicious factors flagged.')}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-actions">
+                        <button class="btn btn-reject" onclick="handleAction('${item.session_id}', '${item.interrupt_id}', false)">
+                            <div class="spinner" id="spinner-reject-${item.session_id}"></div>
+                            Reject
+                        </button>
+                        <button class="btn btn-approve" onclick="handleAction('${item.session_id}', '${item.interrupt_id}', true)">
+                            <div class="spinner" id="spinner-approve-${item.session_id}"></div>
+                            Approve
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        async function handleAction(sessionId, interruptId, approve) {
+            const card = document.getElementById(`card-${sessionId}`);
+            const buttons = card.querySelectorAll('.btn');
+            const spinner = document.getElementById(`spinner-${approve ? 'approve' : 'reject'}-${sessionId}`);
+
+            // Lock Card and Show Spinner
+            card.classList.add('loading-action');
+            buttons.forEach(btn => btn.disabled = true);
+            if (spinner) spinner.style.display = 'block';
+
+            try {
+                const response = await fetch(`/api/action/${sessionId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        approved: approve,
+                        interrupt_id: interruptId
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Show Compliance Modal
+                    showComplianceReview(sessionId, approve, data.compliance_review || data.message || "Session completed successfully.");
+                    // Remove card from UI
+                    setTimeout(() => {
+                        card.remove();
+                        if (grid.children.length === 0) {
+                            renderCards([]);
+                        }
+                    }, 500);
+                } else {
+                    alert(`Error: ${data.detail || 'Could not complete manager action'}`);
+                    // Unlock
+                    card.classList.remove('loading-action');
+                    buttons.forEach(btn => btn.disabled = false);
+                    if (spinner) spinner.style.display = 'none';
+                }
+            } catch (err) {
+                console.error("Action error:", err);
+                alert("Failed to submit action. Please check network connection.");
+                // Unlock
+                card.classList.remove('loading-action');
+                buttons.forEach(btn => btn.disabled = false);
+                if (spinner) spinner.style.display = 'none';
+            }
+        }
+
+        function showComplianceReview(sessionId, approved, complianceText) {
+            const statusEl = document.getElementById('modal-compliance-status');
+            const textEl = document.getElementById('status-text');
+            const outcomeEl = document.getElementById('modal-outcome-text');
+            const sessionEl = document.getElementById('modal-session-id');
+
+            // Format status badge
+            if (approved) {
+                statusEl.className = 'compliance-status approved';
+                statusEl.querySelector('span').innerHTML = '&#10004;';
+                textEl.innerText = 'Expense Approved';
+            } else {
+                statusEl.className = 'compliance-status rejected';
+                statusEl.querySelector('span').innerHTML = '&#10008;';
+                textEl.innerText = 'Expense Rejected';
+            }
+
+            outcomeEl.innerText = complianceText;
+            sessionEl.innerText = sessionId;
+
+            // Open Modal
+            modal.classList.add('open');
+            backdrop.classList.add('show');
+        }
+
+        function closeModal() {
+            modal.classList.remove('open');
+            backdrop.classList.remove('show');
+        }
+
+        closeModalBtn.addEventListener('click', closeModal);
+        backdrop.addEventListener('click', closeModal);
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        // Initialize Page
+        loadPendingApprovals();
+    </script>
+</body>
+</html>

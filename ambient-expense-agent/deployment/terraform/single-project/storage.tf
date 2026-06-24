@@ -12,10 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Configuration for the Ambient Expense-Approval Agent."""
+provider "google" {
+  project               = var.project_id
+  region                = var.region
+  user_project_override = true
+}
 
-# Dollar threshold above which manual approval is required and LLM risk assessment is run.
-THRESHOLD = 100.0
+resource "google_storage_bucket" "logs_data_bucket" {
+  name                        = "${var.project_id}-${var.project_name}-logs"
+  location                    = var.region
+  project                     = var.project_id
+  uniform_bucket_level_access = true
 
-# Gemini model used for the LLM risk assessment.
-MODEL_NAME = "gemini-2.5-flash"
+  depends_on = [resource.google_project_service.services]
+}

@@ -12,10 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Configuration for the Ambient Expense-Approval Agent."""
+output "app_service_account_email" {
+  description = "Application service account email"
+  value       = google_service_account.app_sa.email
+}
 
-# Dollar threshold above which manual approval is required and LLM risk assessment is run.
-THRESHOLD = 100.0
-
-# Gemini model used for the LLM risk assessment.
-MODEL_NAME = "gemini-2.5-flash"
+output "logs_bucket_name" {
+  description = "Logs storage bucket name"
+  value       = google_storage_bucket.logs_data_bucket.name
+}

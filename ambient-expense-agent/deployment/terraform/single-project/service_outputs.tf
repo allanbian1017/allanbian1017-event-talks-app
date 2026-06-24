@@ -12,10 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Configuration for the Ambient Expense-Approval Agent."""
-
-# Dollar threshold above which manual approval is required and LLM risk assessment is run.
-THRESHOLD = 100.0
-
-# Gemini model used for the LLM risk assessment.
-MODEL_NAME = "gemini-2.5-flash"
+output "agent_runtime_resource_name" {
+  description = "Agent Runtime resource name"
+  value       = google_vertex_ai_reasoning_engine.app.name
+}

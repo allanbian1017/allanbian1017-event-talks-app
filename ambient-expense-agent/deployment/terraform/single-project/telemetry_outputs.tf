@@ -12,10 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Configuration for the Ambient Expense-Approval Agent."""
+output "telemetry_dataset_id" {
+  description = "BigQuery dataset ID for telemetry data"
+  value       = google_bigquery_dataset.telemetry_dataset.dataset_id
+}
 
-# Dollar threshold above which manual approval is required and LLM risk assessment is run.
-THRESHOLD = 100.0
-
-# Gemini model used for the LLM risk assessment.
-MODEL_NAME = "gemini-2.5-flash"
+output "telemetry_bigquery_connection_id" {
+  description = "BigQuery connection ID for telemetry GCS access"
+  value       = google_bigquery_connection.genai_telemetry_connection.connection_id
+}
